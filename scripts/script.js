@@ -110,7 +110,7 @@ function updateImg(myjson) {
     const today_weather = myjson.list[0].weather[0].id;
     const weatherId = Math.trunc(today_weather / 100);
 
-    /* switch (today_weather) {
+    switch (today_weather) {
         case clearWeather:
             renderClearImage();
             break;
@@ -120,7 +120,10 @@ function updateImg(myjson) {
         case scatteredClouds:
             renderScatteredCloudsImage();
             break;
-        case (brokenClouds || overcastClouds):
+        case (overcastClouds):
+            renderBrokenCloudsImage();
+            break;
+        case (brokenClouds):
             renderBrokenCloudsImage();
             break;
     }
@@ -141,10 +144,10 @@ function updateImg(myjson) {
         case atmosphere:
             renderAtmosphereImage();
             break;
-    } */
+    }
 
 
-    if (today_weather === clearWeather) {
+    /*if (today_weather === clearWeather) {
         renderClearImage();
     } else if (today_weather === fewClouds) {
         renderFewCloudsImage();
@@ -162,7 +165,7 @@ function updateImg(myjson) {
         renderSnowImage();
     } else if (weatherId === atmosphere) {
         renderAtmosphereImage();
-    }
+    }*/
 
     return myjson;
 }
