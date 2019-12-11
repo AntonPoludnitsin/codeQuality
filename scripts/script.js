@@ -24,8 +24,9 @@ let date = new Date();
 
 let day = date.toLocaleString('en', { day: 'numeric' }) % 10;
 let hour = date.toLocaleString('ru', { hour: 'numeric' });
-let startNigth = 21;
-let endNight = 3;
+
+const startNigth = 21;
+const endNight = 3;
 
 const clearWeather = 800;
 const fewClouds = 801;
@@ -38,14 +39,15 @@ const rainId = 5;
 const snowId = 6;
 const atmosphere = 7;
 
+const nextDayId = 8;
+const nextFourDays = 4;
+
 cities.childNodes.forEach(city => {
     let label = city.id;
     city.addEventListener('click', () => {
         updatecity(label);
     });
 });
-
-//eventTarget
 
 function updatecity(city) {
     let rootUrl;
@@ -67,7 +69,8 @@ function request(url) {
             return myjson;
         })
         .then(updateWeather)
-        .then(updateImg)
+        .then(updateRestWeatherImg)
+        .then(updateRestlessWeatherImg)
         .then(updateDailyRowImages)
         .then(updateDailyRowData)
         .catch(error);
@@ -106,120 +109,68 @@ function endOfday(day) {
     } else return 'th';
 }
 
-function updateImg(myjson) {
+function updateRestWeatherImg(myjson) {
     const today_weather = myjson.list[0].weather[0].id;
-    const weatherId = Math.trunc(today_weather / 100);
-
     switch (today_weather) {
         case clearWeather:
-            renderClearImage();
+            renderImageWeather(nightImages.clear, dayImages.clear);
             break;
         case fewClouds:
-            renderFewCloudsImage();
+            renderImageWeather(nightImages.fewClouds, dayImages.fewClouds);
             break;
         case scatteredClouds:
-            renderScatteredCloudsImage();
+            renderImageWeather(nightImages.scatteredClouds, dayImages.scatteredClouds);
             break;
         case (overcastClouds):
-            renderBrokenCloudsImage();
+            renderImageWeather(nightImages.brokenClouds, dayImages.brokenClouds);
             break;
         case (brokenClouds):
-            renderBrokenCloudsImage();
+            renderImageWeather(nightImages.brokenClouds, dayImages.brokenClouds);
             break;
     }
-
-    switch (weatherId) {
-        case drizzle:
-            renderDrizzleImage();
-            break;
-        case rainId:
-            renderRainImage();
-            break;
-        case thunderStorm:
-            renderThunderImage();
-            break;
-        case snowId:
-            renderSnowImage();
-            break;
-        case atmosphere:
-            renderAtmosphereImage();
-            break;
-    }
-
-
-    /*if (today_weather === clearWeather) {
-        renderClearImage();
-    } else if (today_weather === fewClouds) {
-        renderFewCloudsImage();
-    } else if (today_weather === scatteredClouds) {
-        renderScatteredCloudsImage();
-    } else if (today_weather === brokenClouds || today_weather === overcastClouds) {
-        renderBrokenCloudsImage();
-    } else if (weatherId === drizzle) {
-        renderDrizzleImage();
-    } else if (weatherId === rainId) {
-        renderRainImage();
-    } else if (weatherId === thunderStorm) {
-        renderThunderImage();
-    } else if (weatherId === snowId) {
-        renderSnowImage();
-    } else if (weatherId === atmosphere) {
-        renderAtmosphereImage();
-    }*/
-
     return myjson;
 }
 
-function updateDailyRowImages(myjson) {
-    for (var i = 0; i <= 32; i += 8) {
-        for (var j = 0; j <= 4; j++) {
-            weather_id[i] = myjson.list[i].weather[0].id;
+function updateRestlessWeatherImg(myjson) {
+    const today_weather = Math.trunc(myjson.list[0].weather[0].id / 100);
+    switch (today_weather) {
+        case drizzle:
+            renderImageWeather(nightImages.drizzle, dayImages.drizzle);
+            break;
+        case rainId:
+            renderImageWeather(nightImages.rain, dayImages.rain);
+            break;
+        case thunderStorm:
+            renderImageWeather(nightImages.thunderStorm, dayImages.thunderStorm);
+            break;
+        case snowId:
+            renderImageWeather(nightImages.snow, dayImages.snow);
+            break;
+        case atmosphere:
+            renderImageWeather(nightImages.anotherWeather, dayImages.anotherWeather);
+            break;
+    }
+    return myjson;
+}
 
-            if (weather_id[i] == 800 && j * 8 == i) {
-                img[j].innerHTML = '<img class=\'daily-row__icon\' src=\'img/33.png\'/>';
-            } else if (weather_id[i] == 801 && j * 8 == i) {
-                img[j].innerHTML = '<img class=\'daily-row__icon\' src=\'img/32.png\'/>';
-            } else if (weather_id[i] == 802 && j * 8 == i) {
-                img[j].innerHTML = '<img class=\'daily-row__icon\' src=\'img/37.png\'/>';
-            } else if (
-                (weather_id[i] == 803 || weather_id[i] == 804) &&
-                j * 8 == i
-            ) {
-                img[j].innerHTML =
-                    '<img class=\'daily-row__icon\' src=\'img/37_1.png\'/>';
-            } else if (Math.trunc(weather_id[i] / 100) == 3 && j * 8 == i) {
-                img[j].innerHTML = '<img class=\'daily-row__icon\' src=\'img/34.png\'/>';
-            } else if (Math.trunc(weather_id[i] / 100) == 5 && j * 8 == i) {
-                img[j].innerHTML = '<img class=\'daily-row__iconn\' src=\'img/25.png\'/>';
-            } else if (Math.trunc(weather_id[i] / 100) == 2 && j * 8 == i) {
-                img[j].innerHTML = '<img class=\'daily-row__icon\' src=\'img/27.png\'/>';
-            } else if (Math.trunc(weather_id[i] / 100) == 6 && j * 8 == i) {
-                img[j].innerHTML = '<img class=\'daily-row__icon\' src=\'img/24.png\'/>';
-            } else if (Math.trunc(weather_id[i] / 100) == 7 && j * 8 == i) {
-                img[j].innerHTML = '<img class=\'daily-row__icon\' src=\'img/21.png\'/>';
-            }
-        }
+
+
+function updateDailyRowImages(myjson) {
+    for (let i = 0; i <= nextFourDays; i++) {
+        renderDailyImages(i, myjson);
     }
     return myjson;
 }
 
 function updateDailyRowData(myjson) {
-    for (var i = 0; i <= 32; i += 8) {
-        for (var j = 0; j <= 4; j++) {
-            temp_max[i] = myjson.list[i].main.temp_max;
-            temp_min[i] = myjson.list[i].main.temp_min;
-            day_pressure[i] = myjson.list[i].main.pressure;
-            next_date[0].innerHTML = 'Today';
-            weekaday[i] = new Date(myjson.list[i].dt_txt);
-            if (j * 8 == i) {
-                degree_high[j].innerHTML = Math.round(temp_max[i]) + '°';
-                degree_min[j].innerHTML = Math.round(temp_min[i]) + '°';
-                daily_pressure[j].innerHTML =
-                    '<p>Pressure: ' + Math.round(day_pressure[i]) + ' hPA</p> ';
-                next_date[j].innerHTML = weekaday[i].toLocaleString('en', {
-                    weekday: 'long'
-                });
-            }
-        }
+    for (let i = 0; i <= nextFourDays; i++) {
+        let day = i * nextDayId;
+        temp_max[day] = myjson.list[day].main.temp_max;
+        temp_min[day] = myjson.list[day].main.temp_min;
+        day_pressure[day] = myjson.list[day].main.pressure;
+        next_date[0].innerHTML = 'Today';
+        weekaday[day] = new Date(myjson.list[day].dt_txt);
+
+        renderDailyData(i, day);
     }
 }
