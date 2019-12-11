@@ -33,7 +33,7 @@ function renderClearImage() {
     }
 
 }
-
+/*
 function renderFewCloudsImage() {
     if (isNight()) {
         today_img.innerHTML = `<${nightImages.fewClouds}>`;
@@ -77,4 +77,4 @@ function renderDrizzleImage() {
 function renderAtmosphereImage() {
     today_img.innerHTML = `<${dayImages.anotherWeather}>`;
 }
-
+*/
