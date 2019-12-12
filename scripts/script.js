@@ -49,6 +49,7 @@ cities.childNodes.forEach(city => {
     });
 });
 
+
 function updatecity(city) {
     let rootUrl;
     /* if (city === 'Dubai' || city === 'Tokyo' || city === 'Vladivostok') {
@@ -152,8 +153,6 @@ function updateRestlessWeatherImg(myjson) {
     }
     return myjson;
 }
-
-
 
 function updateDailyRowImages(myjson) {
     for (let i = 0; i <= nextFourDays; i++) {
